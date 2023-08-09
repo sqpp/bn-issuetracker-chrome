@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>BitNinja Issuetracker EC</title>
+    <meta charset="utf-8">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-900 rounded-lg">
+    <div id="main-container" class="w-72 text-white flex flex-col ">
+        <div id="header" class="flex flex-row w-full items-center m-4">
+            <img class="w-8 h-8 inline-block" src="./assets/img/bitninja.svg" alt="BitNinja IssueTracker Logo" />
+            <div>
+                <p class=" ml-2 font-bold text-[18px]">BitNinja Issuetracker</p>
+                <p class=" ml-2 font-bold text-[10px]">EC Edition</p>
+
+            </div>
+        </div>
+        <div id="body" class="flex items-center focus:outline-none appearance-none active:outline-none mx-4 mt-3 mb-3">
+            <form id="myForm">
+
+                <div class="gap-2 grid">
+                    <div class="flex flex-col gap-2">
+                        <label for="current-url" class="text-small">Ticket ID</label>
+                        <input id="current-url"
+                            class="py-2 px-2 text-gray-800 focus:outline-none rounded-lg disabled:bg-gray-100/50"
+                            type="text" disabled placeholder="Ticket ID" value="">
+                    </div>
+                    <div class="flex flex-col gap-2">
+                        <label for="userID" class="text-small">UserID</label>
+                        <input id="userID" class="py-2 px-2 text-black rounded-lg" type="text" placeholder="UID"
+                            value="">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="cat" class="text-small">Category</label>
+                        <select name="cat" id="cat" class="py-2 text-black w-64 px-2 appearance-none rounded-lg"
+                            title="What is the type of the issue?" class="InputDrop" name="cat">
+                            <option value="" disabled="">Issue Type</option>
+                            <option value="Other">Other</option>
+                            <option value="License">License</option>
+                            <option value="Billing-Payment">Billing/Payment</option>
+                            <option value="Install Help">Install Help</option>
+                            <option value="General Question">General Question</option>
+                            <option value="Config Help">Config Help</option>
+                            <option value="IP Filter">IP Filter</option>
+                            <option value="WAF">WAF</option>
+                            <option value="Port Honeypot">PortHoneypot</option>
+                            <option value="Anti Flood">Anti Flood</option>
+                            <option value="DoS Detection">DoS Detection</option>
+                            <option value="Malware Detection">Malware Detection</option>
+                            <option value="Sense Log">Sense Log</option>
+                            <option value="Defense Robot">Defense Robot</option>
+                            <option value="Proxy Filter">Proxy Filter</option>
+                            <option value="Price Increase">Price Increase</option>
+                            <option value="SiteProtection">SiteProtection</option>
+                        </select>
+                    </div>
+
+                    <div class="flex flex-col mt-2">
+                        <div id="QuestionorIssueandtrial" class="flex flex-row grid-cols-3 space-x-2">
+                            <div class="flex flex-row items-center">
+                                <input id="Question" name="option" class="accent-green-500 p-2" type="radio">
+                                <label for="Question" class="text-small pl-2">Question</label>
+                            </div>
+                            <div class="flex flex-row items-center">
+                                <input id="Issue" name="option" class="p-2" type="radio">
+                                <label for="Issue" class="text-small pl-2">Issue</label>
+                            </div>
+                            <div class="flex flex-row  items-center">
+                                <input id="Trial" class="p-2" type="checkbox">
+                                <label for="Trial" class="text-small pl-1">Trial User</label>
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="flex flex-col gap-2">
+                        <label for="notes" class="text-small ">Notes</label>
+                        <input id="notes" name="notes" class="py-2 rounded-lg text-black" type="text"
+                            placeholder="Notes">
+                    </div>
+
+                    <div class="flex flex-col gap-2">
+                        <label for="DevOrSupp" name="DevOrSupp" class="text-small">IssueType</label>
+                        <select id="DevOrSupp" name="DevOrSupp"
+                            class="py-2 text-black w-64 px-2 appearance-none rounded-lg"
+                            title="What is the type of the issue?" class="InputDrop" name="DevOrSupp">
+                            <option value="" disabled selected>Issue Type</option>
+                            <option value="Supp">Support</option>
+                            <option value="Dev">Dev</option>
+                        </select>
+                    </div>
+                    <div class="flex flex-row items-center">
+                        <input id="Escalated" class="p-2" type="checkbox">
+                        <label for="Escalated" class="text-small pl-1">Escalated</label>
+                    </div>
+                    <div id="error-message" class="text-red-500 text-sm hidden"></div>
+                    <div id="success-message" class="text-green-500 text-sm hidden"></div>
+                    <div class="flex flex-col gap-2 mt-4 ">
+                        <input id="submit" class="py-3 px-2 rounded-lg bg-red-500 text-red-50 text-xs uppercase"
+                            type="submit" value="Send">
+                    </div>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+</body>
+<script src="content-script.js"></script>
+</html>

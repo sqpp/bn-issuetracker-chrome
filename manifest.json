@@ -1,0 +1,34 @@
+{
+    "name": "BitNinja Issuetracker",
+    "version": "1.0.0",
+    "description": "Easily add new issues to BitNinja Issuetracker",
+    "manifest_version": 3,
+    "author": "Marcell Csendes <BitNinja>",
+    "permissions": ["tabs", "activeTab", "storage"],
+    "background": {
+      "service_worker": "background.js"
+    },
+    "action": {
+      "default_popup": "index.html",
+      "default_title": "BitNinja Issuetracker"
+    },
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["content-script.js", "options.js"],
+        "run_at": "document_end"
+      }
+    ],
+    "icons": {
+      "16": "assets/img/icon16.png",
+      "32": "assets/img/icon32.png",
+      "48": "assets/img/icon48.png",
+      "128": "assets/img/icon128.png"
+    },
+    "options_ui": {
+      "page": "options.html",
+      "open_in_tab": true,
+      "js": ["options.js"]
+    }
+  }
+  

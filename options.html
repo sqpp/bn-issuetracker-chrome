@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>BitNinja Issuetracker EC</title>
+    <meta charset="utf-8">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-900 rounded-lg">
+    <div id="main-container" class="w-full text-white flex flex-col justify-center items-center">
+        <div id="header" class="flex flex-col w-full items-center m-4 justify-center ">
+            <img class="w-12 h-12 inline-block" src="./assets/img/bitninja.svg" alt="BitNinja IssueTracker Logo" />
+            <div class="justify-center text-center items-center flex flex-col">
+                <p class=" ml-2 font-bold text-[18px]">BitNinja Issuetracker</p>
+                <p class="  font-bold text-sm rounded-full block w-32 mt-1">
+                    EC Edition</p>
+
+            </div>
+        </div>
+        <div id="body"
+            class="flex items-center focus:outline-none appearance-none active:outline-none mx-auto my-3 flex-col w-full max-w-sm ">
+
+            <h1 class="text-2xl font-black">Options</h1>
+            <div class="flex flex-col items-center mt-10 gap-4 w-full">
+                <section
+                    class="border px-12 py-6 rounded-lg flex flex-col gap-4 bg-gray-950 border-gray-700 w-full mx-auto">
+                    <h2 class="text-sm text-center">Your Details</h2>
+                    <input type="text" class="rounded-lg  text-black" id="bn-it-username" placeholder="Username">
+
+                </section>
+                <section class="border p-12 rounded-lg flex flex-col gap-4 bg-gray-950 border-gray-700 w-full mx-auto">
+                    <h2 class="text-sm text-center">API Keys/URLs</h2>
+                    <input type="text" class="rounded-lg  text-black" id="bn-it-url" placeholder="IssueTracker URL">
+                    <input type="text" class="rounded-lg  text-black" id="bn-it-api" placeholder="IssueTracker API Key">
+                    <div class="relative">
+                        <svg class="absolute z-50 left-0 top-0 h-auto w-6 text-blue-600 mx-2 mt-2.5 fill-current"
+                            fill="fillCurrent" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <title>Intercom</title>
+                            <path
+                                d="M21 0H3C1.343 0 0 1.343 0 3v18c0 1.658 1.343 3 3 3h18c1.658 0 3-1.342 3-3V3c0-1.657-1.342-3-3-3zm-5.801 4.399c0-.44.36-.8.802-.8.44 0 .8.36.8.8v10.688c0 .442-.36.801-.8.801-.443 0-.802-.359-.802-.801V4.399zM11.2 3.994c0-.44.357-.799.8-.799s.8.359.8.799v11.602c0 .44-.357.8-.8.8s-.8-.36-.8-.8V3.994zm-4 .405c0-.44.359-.8.799-.8.443 0 .802.36.802.8v10.688c0 .442-.36.801-.802.801-.44 0-.799-.359-.799-.801V4.399zM3.199 6c0-.442.36-.8.802-.8.44 0 .799.358.799.8v7.195c0 .441-.359.8-.799.8-.443 0-.802-.36-.802-.8V6zM20.52 18.202c-.123.105-3.086 2.593-8.52 2.593-5.433 0-8.397-2.486-8.521-2.593-.335-.288-.375-.792-.086-1.128.285-.334.79-.375 1.125-.09.047.041 2.693 2.211 7.481 2.211 4.848 0 7.456-2.186 7.479-2.207.334-.289.839-.25 1.128.086.289.336.25.84-.086 1.128zm.281-5.007c0 .441-.36.8-.801.8-.441 0-.801-.36-.801-.8V6c0-.442.361-.8.801-.8.441 0 .801.357.801.8v7.195z" />
+                        </svg>
+                        <div class="rounded-l-lg bg-gray-200 border-r border-gray-400 00 absolute z-40 h-full w-10">
+                        </div>
+                        <input type="text" class="border border-white relative rounded-lg text-black pl-12 w-full"
+                            id="intercomAPI" placeholder="Intercom API Key">
+
+                    </div>
+                    <div class="relative">
+                        <svg class="absolute z-50 left-0 top-0 h-auto w-6 text-blue-600 mx-2 mt-2.5 fill-current"
+                            fill="fillCurrent" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <title>Jira</title>
+                            <path
+                                d="M11.571 11.513H0a5.218 5.218 0 0 0 5.232 5.215h2.13v2.057A5.215 5.215 0 0 0 12.575 24V12.518a1.005 1.005 0 0 0-1.005-1.005zm5.723-5.756H5.736a5.215 5.215 0 0 0 5.215 5.214h2.129v2.058a5.218 5.218 0 0 0 5.215 5.214V6.758a1.001 1.001 0 0 0-1.001-1.001zM23.013 0H11.455a5.215 5.215 0 0 0 5.215 5.215h2.129v2.057A5.215 5.215 0 0 0 24 12.483V1.005A1.001 1.001 0 0 0 23.013 0Z" />
+                        </svg>
+                        <div class="rounded-l-lg bg-gray-200 border-r border-gray-400 00 absolute z-40 h-full w-10">
+                        </div>
+
+                        <input type="text" class="border border-white relative rounded-lg text-black pl-12 w-full"
+                            id="jiraAPI" placeholder="JIRA API Key">
+                    </div>
+                    <div class="relative">
+                        <svg class="absolute z-50 left-0 top-0 h-auto w-6 text-gray-700 mx-2 mt-2.5 fill-current"
+                            role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <title>Zendesk</title>
+                            <path
+                                d="M12.914 2.904V16.29L24 2.905H12.914zM0 2.906C0 5.966 2.483 8.45 5.543 8.45s5.542-2.484 5.543-5.544H0zm11.086 4.807L0 21.096h11.086V7.713zm7.37 7.84c-3.063 0-5.542 2.48-5.542 5.543H24c0-3.06-2.48-5.543-5.543-5.543z" />
+                        </svg>
+                        <div class="rounded-l-lg bg-gray-200 border-r border-gray-400 00 absolute z-40 h-full w-10">
+                        </div>
+                        <input type="text" class="border border-white relative rounded-lg text-black pl-12 w-full"
+                            id="zendeskAPI" placeholder="Zendesk API Key">
+                    </div>
+                </section>
+                <button id="saveButton" class="w-full py-3 text-red-50 bg-red-500 rounded-lg text-lg">Update
+                    Settings</button>
+                <section id="debug-info" class="text-center text-gray-600 p-4 flex flex-col items-center text-xs"> Debug
+                    Info:
+
+                </section>
+            </div>
+
+            <!-- Include your JavaScript file at the end -->
+            <script src="options.js"></script>
+</body>
+
+</html>
