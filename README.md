@@ -1,9 +1,21 @@
-BitNinja IssueTracker for Chrome/Edge is an extension for Google Chrome and Microsoft Edge Chromium that helps the BitNinja Support team to add issues to the IssueTracker system easier and faster (half-automated).
+BitNinja IssueTracker for Chrome/Edge
 =======
+
+### 
+BitNinja IssueTracker for Chrome/Edge is an extension for Google Chrome and Microsoft Edge Chromium that helps the BitNinja Support team to add issues to the IssueTracker system easier and faster (half-automated).
 
 ## Latest Version
 
 BitNinja IssueTracker EC 1.0.0
+
+
+## Development
+
+1. Clone the repo `git clone https://github.com/sqpp/bn-issuetracker-chrome.git` 
+2. `npm i`
+3. `npm run dev` to build CSS and develop in real-time.
+4. `npm run build` to build and minify CSS.
+
 
 ## Installation
 1. Download the ZIP from here
@@ -28,12 +40,12 @@ Configuration is mind-blowingly easy, simply go to the Extension’s Settings by
 
 1. Provide the following details as indicated on the screenshot:
 
-Username: IssueTracker username (your sliced bitninja address). Ex:. marcell.csendesIssueTracker 
-IT API URL: https://issuetracker-api.bitninja.ioIssueTracker
-IT API Key:   
-Intercom API Key: 
-JIRA API Key: 
-Zendesk API Key:
+- Username: IssueTracker username (your slicedx ninja address).
+- IT API URL: https://<issuetrackerURL>
+- IT API Key:   
+- Intercom API Key: 
+- JIRA API Key: 
+- Zendesk API Key:
 
 2. Click on Update Settings.
 
