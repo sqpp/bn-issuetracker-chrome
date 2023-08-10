@@ -1,8 +1,5 @@
-// In your content.js
-
-// Function to extract ID from the URL based on the platform
 function extractIdFromUrl(url) {
-  const intercomIdRegex = /\/conversation\/(\d+)\?/;
+  const intercomIdRegex = /\/conversation\/(\d+)/;
   const zendeskIdRegex = /\/tickets\/(\d+)/;
   const jiraIdRegex = /\/(\w+-\d+)$/;
 
@@ -19,13 +16,11 @@ function extractIdFromUrl(url) {
   return id;
 }
 
-// Function to update the input element with the extracted ID
 function updateCurrentURLInInput() {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     const currentUrl = tabs[0].url;
     const id = extractIdFromUrl(currentUrl);
     document.getElementById("current-url").value = id ? id : "ID not found";
-
     chrome.storage.local.get(
       ["username", "itURL", "itAPI", "jiraAPI", "zendeskAPI", "intercomAPI"],
       result => {
