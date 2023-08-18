@@ -1,6 +1,6 @@
 {
   "name": "bn-issuetracker-chrome",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "BitNinja IssueTracker for Chrome/Edge is an extension for Google Chrome and Microsoft Edge Chromium that helps the BitNinja Support team to add issues to the IssueTracker system easier and faster (half-automated).",
   "main": "content-script.js",
   "scripts": {

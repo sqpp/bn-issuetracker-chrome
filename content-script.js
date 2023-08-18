@@ -83,7 +83,6 @@ const questionOrIssue = isIssueChecked ? "issue" : "question";
       !userId ||
       !category ||
       !notes ||
-      !issueType ||
       !questionOrIssue
     ) {
       errorMessage.classList.remove("hidden");
@@ -184,7 +183,9 @@ async function fetchDataFromPlatform(platform, id, apiKey, apiURL, itkey) {
       case "zendesk":
         // Zendesk
         apiUrl = `https://bitninjatechnology.zendesk.com/api/v2/tickets/${id}`;
-        apiKey = `Basic ${apiKey}`;
+        const credentials = `supportteam@bitninja.io/token:${apiKey}`;
+        const encodedCredentials = btoa(credentials);
+        apiKey = `Basic ${encodedCredentials}`;
         jsonObject = "ticket.via.source.from.address";
         break;
       // JIRA
@@ -209,6 +210,10 @@ async function fetchDataFromPlatform(platform, id, apiKey, apiURL, itkey) {
         authorization: apiKey
       }
     };
+
+    console.log(apiKey)
+
+    console.log(options)
 
     const response = await fetch(apiUrl, options);
     data = await response.json();

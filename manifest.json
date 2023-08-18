@@ -1,6 +1,6 @@
 {
     "name": "BitNinja Issuetracker",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "description": "Easily add new issues to BitNinja Issuetracker",
     "manifest_version": 3,
     "author": "Marcell Csendes <BitNinja>",
