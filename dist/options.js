@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', function() {
       zendeskAPIInput.value = result.zendeskAPI || '';
       intercomAPIInput.value = result.intercomAPI || '';
     });
+
     
     // Save configuration values
     saveButton.addEventListener('click', function() {

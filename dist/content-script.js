@@ -16,10 +16,33 @@ function extractIdFromUrl(url) {
   return id;
 }
 
+function getAPIKey(type) {
+  return new Promise((resolve, reject) => {
+    chrome.storage.local.get(["jiraAPI", "zendeskAPI", "intercomAPI"], result => {
+      switch (type) {
+        case "jira":
+          resolve(result.jiraAPI);
+          break;
+        case "zendesk":
+          resolve(result.zendeskAPI);
+          break;
+        case "intercom":
+          resolve(result.intercomAPI);
+          break;
+        default:
+          reject(new Error("Unsupported API type"));
+      }
+    });
+  });
+}
+
+
+
 function updateCurrentURLInInput() {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     const currentUrl = tabs[0].url;
     const id = extractIdFromUrl(currentUrl);
+   
     document.getElementById("current-url").value = id ? id : "ID not found";
     chrome.storage.local.get(
       ["username", "itURL", "itAPI", "jiraAPI", "zendeskAPI", "intercomAPI"],
@@ -57,7 +80,107 @@ function updateCurrentURLInInput() {
   });
 }
 
-// Example usage:
+
+
+async function sendInternalNote(platform, username, ticketId, userId, category, internalNote, isEscalated) {
+  let platformNoteAPI;
+  let data;
+  let apiKey;
+  let methodType;
+  const currentDate = new Date();
+  // Determine the API URL and data structure based on the platform
+  switch(platform) {
+      case "Zendesk":
+          platformNoteAPI = `https://bitninjatechnology.zendesk.com/api/v2/tickets/${ticketId}`;
+          data = {
+            "ticket": {
+              "updated_stamp": currentDate,
+              "safe_update": true,
+              "comment": {
+                "public": false,
+                "uploads": [],
+                "html_body": `//Agent @${username} added Record to IssueTracker API <br>
+                <strong>userid:</strong> ${userId} <br>
+                <strong>category:</strong> ${category} <br>
+                <strong>Ticket:</strong> [${ticketId}] - internalNote: "${internalNote}" <br>
+                <strong>escalated:</strong> ${isEscalated ? 'Yes' : 'No'}`,
+              },
+             
+            }
+          };          
+          methodType = "PUT",
+          zendeskAPI = await getAPIKey("zendesk") 
+          credentials = `supportteam@bitninja.io/token:${zendeskAPI}`;
+          encodedCredentials = btoa(credentials);
+          apiKey = `Basic ${encodedCredentials}`;
+          
+          break;
+      case "Jira":
+          platformNoteAPI = `https://bitninjaio.atlassian.net/rest/api/2/issue/${ticketId}/comment`;
+          data ={
+            "body": `//Agent @${username} added Record to IssueTracker API\n<strong>userid:</strong> ${userId}\n<strong>category:</strong> ${category}\n<strong>Ticket:</strong> [${ticketId}] - internalNote: "${internalNote}"\n<strong>escalated:</strong> ${isEscalated ? 'Yes' : 'No'}`,
+            "properties": [
+                {
+                    "key": "sd.public.comment",
+                    "value": {
+                        "internal": true
+                    }
+                }
+            ]
+        }
+          jiraAPI = await getAPIKey("jira")
+          credentials = `${username}@bitninja.io:${jiraAPI}`;
+          encodedCredentials = btoa(credentials);
+          apiKey = encodedCredentials;
+          methodType = "POST"
+          break;
+      case "Intercom":
+          platformNoteAPI = `https://api.intercom.io/conversations/${ticketId}/reply`;
+          data = {
+            "message_type": "note",
+            "type": "admin",
+            "admin_id": "4554314",
+            "body": `//Agent @${username} added Record to IssueTracker API
+            <strong>userid:</strong> ${userId}
+            <strong>category:</strong> ${category}
+            <strong>Ticket:</strong> [${ticketId}] - internalNote: "${internalNote}"
+            <strong>escalated:</strong> ${isEscalated ? 'Yes' : 'No'}`
+            }
+          methodType = "POST"
+          intercomAPI = await getAPIKey("intercom")
+          apiKey = `Bearer ${intercomAPI}`;
+          break;
+      default:
+          console.error("Unsupported platform for internal note.");
+          return; 
+  }
+
+  try {
+      const response = await fetch(platformNoteAPI, {
+          method: methodType,
+          headers: {
+              "Content-Type": "application/json",
+              "Accept":  "application/json",
+              "Authorization": apiKey
+          },
+          body: JSON.stringify(data)
+      });
+
+      if (response.ok) {
+          console.log(`Internal note successfully sent to ${platform}`);
+          // Handle successful response
+      } else {
+          console.error(`Failed to send internal note to ${platform}:`, response.statusText);
+          // Handle error
+      }
+  } catch (error) {
+      console.error(`Error sending internal note to ${platform}:`, error);
+      // Handle error
+  }
+}
+
+
+
 updateCurrentURLInInput();
 document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("myForm");
@@ -138,14 +261,14 @@ const questionOrIssue = isIssueChecked ? "issue" : "question";
             const responseData = await response.json();
             successMessage.classList.remove("hidden");
             successMessage.textContent = `Success! C: ${response.status}`;
-            console.log("API response:", responseData);
-            // Handle successful response
+            sendInternalNote(data.platform, data.agentName, ticketId, data.uid, data.module, data.note, isEscalated)
+           
           } else {
             console.error("API request failed:", response.statusText);
             errorMessage.classList.remove("hidden");
             errorMessage.textContent = `Error! C: ${response.status}`;
 
-            // Handle error
+            //
           }
         } catch (error) {
           console.error("Error:", error);
@@ -211,10 +334,6 @@ async function fetchDataFromPlatform(platform, id, apiKey, apiURL, itkey) {
       }
     };
 
-    console.log(apiKey)
-
-    console.log(options)
-
     const response = await fetch(apiUrl, options);
     data = await response.json();
 
@@ -254,7 +373,6 @@ async function fetchDataFromPlatform(platform, id, apiKey, apiURL, itkey) {
       const trialCheckbox = document.getElementById("Trial");
       trialCheckbox.checked = true; // To check the checkbox
       trialCheckbox.checked = false; // To uncheck the checkbox
-      console.log(userIdData.result[0].user_id);
       document.getElementById("userID").value = userIdData.result[0].user_id
         ? userIdData.result[0].user_id
         : "ID not found";
