@@ -6,7 +6,7 @@ BitNinja IssueTracker for Chrome/Edge is an extension for Google Chrome and Micr
 
 ## Latest Version
 
-BitNinja IssueTracker EC 1.0.3
+BitNinja IssueTracker EC 1.0.5
 
 
 ## Development
