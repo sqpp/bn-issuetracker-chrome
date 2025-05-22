@@ -5,7 +5,8 @@
   "main": "content-script.js",
   "scripts": {
     "dev": "npx tailwindcss -o css/base.css -o css/style.css",
-    "build": "npx tailwindcss -o css/base.css -o css/style.css --minify"
+    "build": "npx tailwindcss -o css/base.css -o css/style.css --minify",
+    "buildext": "C:\\Program Files\\Google\\Chrome\\Application\\Chrome.exe' --pack-extension=C:\\Users\\ninja\\Documents\\Projects\\bn-issuetracker-chrome --pack-extension-key=" 
   },
   "repository": {
     "type": "git",
