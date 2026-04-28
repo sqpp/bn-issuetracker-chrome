@@ -41,9 +41,18 @@ function getAPIKey(type) {
 function updateCurrentURLInInput() {
   chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
     const currentUrl = tabs[0].url;
+    const platformSelect = document.getElementById("platform-select");
+    const selectedPlatform = platformSelect.value;
+    
+    if (selectedPlatform === "slack") {
+      // For manual Slack input, clear the ticket ID field
+      document.getElementById("current-url").value = "";
+      return;
+    }
+    
     const id = extractIdFromUrl(currentUrl);
-   
     document.getElementById("current-url").value = id ? id : "ID not found";
+    
     chrome.storage.local.get(
       ["username", "itURL", "itAPI", "jiraAPI", "zendeskAPI", "intercomAPI"],
       result => {
@@ -116,11 +125,22 @@ async function sendInternalNote(platform, username, ticketId, userId, category, 
           
           break;
       case "Jira":
-          platformNoteAPI = `${itURL}/jira/internal_note?key=${itAPI}`;
-          data = {
-              issueId: ticketId,
-              comment: internalNote
-          };
+          platformNoteAPI = `https://bitninjaio.atlassian.net/rest/api/2/issue/${ticketId}/comment`;
+          data ={
+            "body": `//Agent @${username} added Record to IssueTracker API\n<strong>userid:</strong> ${userId}\n<strong>category:</strong> ${category}\n<strong>Ticket:</strong> [${ticketId}] - internalNote: "${internalNote}"\n<strong>escalated:</strong> ${isEscalated ? 'Yes' : 'No'}`,
+            "properties": [
+                {
+                    "key": "sd.public.comment",
+                    "value": {
+                        "internal": true
+                    }
+                }
+            ]
+        }
+          jiraAPI = await getAPIKey("jira")
+          credentials = `${username}@bitninja.io:${jiraAPI}`;
+          encodedCredentials = btoa(credentials);
+          apiKey = encodedCredentials;
           methodType = "POST"
           break;
       case "Intercom":
@@ -136,6 +156,8 @@ async function sendInternalNote(platform, username, ticketId, userId, category, 
             <strong>escalated:</strong> ${isEscalated ? 'Yes' : 'No'}`
             }
           methodType = "POST"
+          intercomAPI = await getAPIKey("intercom")
+          apiKey = `Bearer ${intercomAPI}`;
           break;
       default:
           console.error("Unsupported platform for internal note.");
@@ -147,7 +169,7 @@ async function sendInternalNote(platform, username, ticketId, userId, category, 
           method: methodType,
           headers: {
               "Content-Type": "application/json",
-              "authorization": apiKey
+              "Authorization": apiKey
           },
           body: JSON.stringify(data)
       });
@@ -169,24 +191,57 @@ async function sendInternalNote(platform, username, ticketId, userId, category, 
 
 updateCurrentURLInInput();
 document.addEventListener("DOMContentLoaded", function() {
+  const openManagementBtn = document.getElementById("open-management");
   const form = document.getElementById("myForm");
+  const submitBtn = document.getElementById("submit");
   const errorMessage = document.getElementById("error-message");
   const successMessage = document.getElementById("success-message");
+  const platformSelect = document.getElementById("platform-select");
+
+  const setSubmitting = (isSubmitting) => {
+    if (!submitBtn) return;
+    submitBtn.disabled = isSubmitting;
+    submitBtn.value = isSubmitting ? "Sending..." : "Send";
+    submitBtn.classList.toggle("opacity-60", isSubmitting);
+    submitBtn.classList.toggle("cursor-not-allowed", isSubmitting);
+  };
+
+  if (openManagementBtn) {
+    openManagementBtn.addEventListener("click", () => {
+      chrome.tabs.create({ url: chrome.runtime.getURL("management.html") });
+    });
+  }
+  
+  // Add event listener for platform selection
+  platformSelect.addEventListener("change", function() {
+    updateCurrentURLInInput();
+  });
 
   form.addEventListener("submit", async function(event) {
     event.preventDefault();
+    console.log("Form submitted");
 
-    const ticketId = document.getElementById("current-url").value;
     const userId = document.getElementById("userID").value;
     const category = document.getElementById("cat").value;
     const isTrialUser = document.getElementById("Trial").checked;
     const notes = document.getElementById("notes").value;
     const issueType = document.getElementById("DevOrSupp").value;
     const isEscalated = document.getElementById("Escalated").checked;
-
     const isIssueChecked = document.querySelector('input[name="option"]:checked');
-const questionOrIssue = isIssueChecked ? "issue" : "question";
+    const questionOrIssue = isIssueChecked ? "issue" : "question";
+    const selectedPlatform = platformSelect.value;
+    let ticketId = document.getElementById("current-url").value;
 
+    console.log("Form values:", {
+      ticketId,
+      userId,
+      category,
+      notes,
+      questionOrIssue,
+      selectedPlatform
+    });
+
+    // All fields including notes are required as notes describe the issue
     if (
       !ticketId ||
       !userId ||
@@ -198,26 +253,17 @@ const questionOrIssue = isIssueChecked ? "issue" : "question";
       errorMessage.textContent = "Please fill out all required fields.";
       return; // Exit the function without submitting the form
     }
+    setSubmitting(true);
+
     chrome.storage.local.get(["itURL", "itAPI", "username"], async ({ itURL, itAPI, username }) => {
+      console.log("Got storage values:", { itURL, itAPI, username });
       errorMessage.textContent = ""; // Clear any previous error message
       successMessage.textContent = "";
-      chrome.tabs.query({ active: true, currentWindow: true }, async function(tabs) {
-        const currentUrl = tabs[0].url;
-        let platformLink;
-        let platform;
+      let platformLink;
+      let platform;
 
-        if (currentUrl.includes("bitninjatechnology.zendesk.com")) {
-          platformLink = "deskLink";
-          platform = "Zendesk";
-        } else if (currentUrl.includes("bitninjaio.atlassian.net")) {
-          platformLink = "jiraLink";
-          platform = "Jira";
-        } else if (currentUrl.includes("intercom.com")) {
-          platformLink = "intercomLink";
-          platform = "Intercom";
-        }
-
-        
+      async function sendTicket() {
+        console.log("Sending ticket with platform:", platform);
         const data = {
           uid: userId,
           agentName: username,
@@ -233,8 +279,10 @@ const questionOrIssue = isIssueChecked ? "issue" : "question";
           inTrial: isTrialUser ? 1 : 0,
         };
 
+        console.log("Sending data:", data);
+        console.log("API URL:", `${itURL}/issue?key=${itAPI}`);
+
         try {
-          // Get values from chrome.storage.local
           const response = await fetch(`${itURL}/issue?key=${itAPI}`, {
             method: "POST",
             headers: {
@@ -242,25 +290,70 @@ const questionOrIssue = isIssueChecked ? "issue" : "question";
             },
             body: JSON.stringify(data)
           });
+          console.log("Raw response:", response);
+
+          const responseText = await response.text();
+          console.log("Response text:", responseText);
 
           if (response.ok) {
-            const responseData = await response.json();
+            let responseData;
+            try {
+              responseData = JSON.parse(responseText);
+            } catch (e) {
+              console.log("Response was not JSON:", responseText);
+              responseData = responseText;
+            }
+            console.log("Success response data:", responseData);
             successMessage.classList.remove("hidden");
             successMessage.textContent = `Success! C: ${response.status}`;
-            sendInternalNote(data.platform, data.agentName, ticketId, data.uid, data.module, data.note, isEscalated)
-           
+            if (platform !== "Slack") {
+              await sendInternalNote(data.platform, data.agentName, ticketId, data.uid, data.module, data.note, isEscalated);
+            }
           } else {
-            console.error("API request failed:", response.statusText);
+            console.error("API request failed:", {
+              status: response.status,
+              statusText: response.statusText,
+              response: responseText
+            });
             errorMessage.classList.remove("hidden");
-            errorMessage.textContent = `Error! C: ${response.status}`;
-
-            //
+            errorMessage.textContent = `Error! C: ${response.status} - ${responseText}`;
           }
         } catch (error) {
-          console.error("Error:", error);
-          // Handle error
+          console.error("Error sending ticket:", {
+            error: error,
+            message: error.message,
+            stack: error.stack
+          });
+          errorMessage.classList.remove("hidden");
+          errorMessage.textContent = `Error: ${error.message}`;
+        } finally {
+          setSubmitting(false);
         }
-      });
+      }
+
+      if (selectedPlatform === "slack") {
+        console.log("Selected Slack platform");
+        platformLink = "slack";
+        platform = "Slack";
+        // For Slack, we keep the original URL as is
+        await sendTicket();
+      } else {
+        chrome.tabs.query({ active: true, currentWindow: true }, async function(tabs) {
+          const currentUrl = tabs[0].url;
+          console.log("Current URL:", currentUrl);
+          if (currentUrl.includes("bitninjatechnology.zendesk.com")) {
+            platformLink = "deskLink";
+            platform = "Zendesk";
+          } else if (currentUrl.includes("bitninjaio.atlassian.net")) {
+            platformLink = "jiraLink";
+            platform = "Jira";
+          } else if (currentUrl.includes("intercom.com")) {
+            platformLink = "intercomLink";
+            platform = "Intercom";
+          }
+          await sendTicket();
+        });
+      }
     });
   });
 });

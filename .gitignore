@@ -2,4 +2,6 @@ node_modules/
 *.crx
 *.pem
 .npmrc
+dist/
+dist.zip
 dist/bn-issuetracker-chrome.zip

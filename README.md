@@ -1,57 +1,75 @@
-BitNinja IssueTracker for Chrome/Edge
-=======
+# BitNinja IssueTracker (Chrome/Edge)
 
-### 
-BitNinja IssueTracker for Chrome/Edge is an extension for Google Chrome and Microsoft Edge Chromium that helps the BitNinja Support team to add issues to the IssueTracker system easier and faster (half-automated).
+BitNinja IssueTracker is a Chrome/Edge extension used by the BitNinja support team to create, browse, and manage IssueTracker tickets faster with a streamlined internal UI.
 
-## Latest Version
+## Current Version
 
-BitNinja IssueTracker EC 1.0.6
+`2.0.0`
 
+## Features
 
-## Development
+- Create issues from supported support platforms.
+- Open a management dashboard for issue search and triage.
+- Track ongoing issues and support actions.
+- Risk Center view for high-priority users.
+- Extension settings page for API endpoints and keys.
 
-1. Clone the repo `git clone https://github.com/sqpp/bn-issuetracker-chrome.git` 
-2. `npm i`
-3. `npm run dev` to build CSS and develop in real-time.
-4. `npm run build` to build and minify CSS.
+## Requirements
 
+- Google Chrome (Chromium-based)
+- Microsoft Edge (Chromium-based)
+- Node.js + npm (for local development/build)
 
-## Installation
-1. Download the ZIP from here
-2. Open Google/Edge extension page (copy paste the URL, as link does not work)
-    a. [!Chrome](chrome://extensions/)
-    b. [!Edge](ege://extensions/)
-3. Enable Developer mode.
-4. Import the EXTRACTED zip content.
+## Local Development
 
-## Requirement
-- Microsoft Edge (Chromium)
-- Google Chrome
+1. Clone repository:
+   - `git clone https://github.com/sqpp/bn-issuetracker-chrome.git`
+2. Install dependencies:
+   - `npm install`
+3. Build styles for development:
+   - `npm run dev`
+4. Build minified production styles:
+   - `npm run build`
 
-## Incompatible
+## Build and Packaging
 
-- Mozilla Firefox
-- Safari
+- Build extension-ready `dist/` folder:
+  - `npm run build:dist`
+- Build and create `dist.zip`:
+  - `npm run package:dist`
+- Build and create `dist.zip` + CRX package:
+  - `npm run package:release`
+
+## Load Extension Locally
+
+1. Build release assets (`npm run package:dist`) or make sure project files are up to date.
+2. Open extension management page:
+   - Chrome: `chrome://extensions/`
+   - Edge: `edge://extensions/`
+3. Enable **Developer mode**.
+4. Click **Load unpacked** and select the project root (or `dist/` if you use packaged build output).
 
 ## Configuration
 
-Configuration is mind-blowingly easy, simply go to the Extension’s Settings by Right Clicking on the Extension.
+Open **Settings** from the extension UI and provide:
 
-1. Provide the following details as indicated on the screenshot:
+- `Username`: IssueTracker username
+- `IssueTracker API URL`
+- `IssueTracker API Key`
+- `Management UI URL` (optional)
+- `Intercom API Key` (optional)
+- `JIRA API Key` (optional)
+- `Zendesk API Key` (optional)
 
-- Username: IssueTracker username (your slicedx ninja address).
-- IT API URL: https://<issuetrackerURL>
-- IT API Key:   
-- Intercom API Key: 
-- JIRA API Key: 
-- Zendesk API Key:
+Then click **Update Settings**.
 
-2. Click on Update Settings.
+## Tech Stack
 
-# Tools used #
-* HTML, CSS and JavaScript
-* [TailwindCSS](https://tailwindcss.com)
+- HTML
+- CSS
+- JavaScript
+- [Tailwind CSS](https://tailwindcss.com)
 
+## Author
 
-Author [MarcellCsendes](https://twitter.com/csendesmarcell)
+[Marcell Csendes](https://twitter.com/csendesmarcell)

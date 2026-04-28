@@ -1,12 +1,17 @@
 {
   "name": "bn-issuetracker-chrome",
-  "version": "1.0.6",
+  "version": "2.0.0",
   "description": "BitNinja IssueTracker for Chrome/Edge is an extension for Google Chrome and Microsoft Edge Chromium that helps the BitNinja Support team to add issues to the IssueTracker system easier and faster (half-automated).",
   "main": "content-script.js",
   "scripts": {
     "dev": "npx tailwindcss -o css/base.css -o css/style.css",
     "build": "npx tailwindcss -o css/base.css -o css/style.css --minify",
-    "buildext": "C:\\Program Files\\Google\\Chrome\\Application\\Chrome.exe' --pack-extension=C:\\Users\\ninja\\Documents\\Projects\\bn-issuetracker-chrome --pack-extension-key=" 
+    "buildext": "C:\\Program Files\\Google\\Chrome\\Application\\Chrome.exe' --pack-extension=C:\\Users\\ninja\\Documents\\Projects\\bn-issuetracker-chrome --pack-extension-key=",
+    "build:dist": "npm run build && node scripts/build-dist.js",
+    "zip:dist": "powershell -NoProfile -Command \"if (Test-Path dist.zip) { Remove-Item dist.zip -Force }; Compress-Archive -Path dist\\* -DestinationPath dist.zip -Force\"",
+    "package:dist": "npm run build:dist && npm run zip:dist",
+    "pack:crx": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/pack-crx.ps1",
+    "package:release": "npm run build:dist && npm run zip:dist && npm run pack:crx"
   },
   "repository": {
     "type": "git",
@@ -20,6 +25,7 @@
   "homepage": "https://github.com/sqpp/bn-issuetracker-chrome#readme",
   "dependencies": {
     "autoprefixer": "^10.4.14",
+    "line-awesome": "^1.3.0",
     "tailwindcss": "^3.3.3"
   },
   "devDependencies": {

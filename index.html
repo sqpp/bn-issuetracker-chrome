@@ -9,28 +9,45 @@
 
 <body class="bg-gray-900 rounded-lg">
     <div id="main-container" class="w-72 text-white flex flex-col ">
-        <div id="header" class="flex flex-row w-full items-center m-4">
+        <div id="header" class="relative flex flex-row w-full items-center m-4 pr-10">
             <img class="w-8 h-8 inline-block" src="./assets/img/bitninja.svg" alt="BitNinja IssueTracker Logo" />
             <div>
                 <p class=" ml-2 font-bold text-[18px]">BitNinja Issuetracker</p>
                 <p class=" ml-2 font-bold text-[10px]">EC Edition</p>
 
             </div>
+            <button id="open-management" type="button"
+                class="absolute right-8 top-2 inline-flex h-6 w-6 items-center justify-center rounded-full border border-gray-600 text-gray-200 hover:bg-gray-800"
+                title="Open management page" aria-label="Open management page">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-current">
+                    <path
+                        d="M14 3h7v7h-2V6.414l-9.293 9.293-1.414-1.414L17.586 5H14V3zM5 5h6v2H7v10h10v-4h2v6H5V5z" />
+                </svg>
+            </button>
         </div>
         <div id="body" class="flex items-center focus:outline-none appearance-none active:outline-none mx-4 mt-3 mb-3">
             <form id="myForm">
 
                 <div class="gap-2 grid">
                     <div class="flex flex-col gap-2">
-                        <label for="current-url" class="text-small">Ticket ID</label>
-                        <input id="current-url"
-                            class="py-2 px-2 text-gray-800 focus:outline-none rounded-lg disabled:bg-gray-100/50"
-                            type="text" disabled placeholder="Ticket ID" value="">
+                        <label for="platform-select" class="text-small">Platform</label>
+                        <select id="platform-select" class="py-2 text-black w-64 px-2 appearance-none rounded-lg">
+                            <option value="auto">Auto-detect</option>
+                            <option value="slack">Slack (Manual)</option>
+                        </select>
                     </div>
-                    <div class="flex flex-col gap-2">
-                        <label for="userID" class="text-small">UserID</label>
-                        <input id="userID" class="py-2 px-2 text-black rounded-lg" type="text" placeholder="UID"
-                            value="">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div class="flex flex-col gap-2">
+                            <label for="current-url" class="text-small">Ticket ID</label>
+                            <input id="current-url"
+                                class="py-2 px-2 text-black rounded-lg w-full"
+                                type="text" placeholder="Ticket ID" value="">
+                        </div>
+                        <div class="flex flex-col gap-2">
+                            <label for="userID" class="text-small">UserID</label>
+                            <input id="userID" class="py-2 px-2 text-black rounded-lg w-full" type="text" placeholder="UID"
+                                value="">
+                        </div>
                     </div>
 
                     <div class="flex flex-col gap-2">

@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const usernameInput = document.getElementById('bn-it-username');
     const itURLInput = document.getElementById('bn-it-url');
+    const uiURLInput = document.getElementById('bn-ui-url');
     const itAPIInput = document.getElementById('bn-it-api');
     const jiraAPIInput = document.getElementById('jiraAPI');
     const zendeskAPIInput = document.getElementById('zendeskAPI');
@@ -8,9 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const saveButton = document.getElementById('saveButton')
   
     // Load saved configuration values
-    chrome.storage.local.get(['username', 'itURL', 'itAPI', 'jiraAPI', 'zendeskAPI', 'intercomAPI'], (result) => {
+    chrome.storage.local.get(['username', 'itURL', 'uiURL', 'itAPI', 'jiraAPI', 'zendeskAPI', 'intercomAPI'], (result) => {
       usernameInput.value = result.username || '';
       itURLInput.value = result.itURL || '';
+      uiURLInput.value = result.uiURL || '';
       itAPIInput.value = result.itAPI || '';
       jiraAPIInput.value = result.jiraAPI || '';
       zendeskAPIInput.value = result.zendeskAPI || '';
@@ -21,6 +23,7 @@ document.addEventListener('DOMContentLoaded', function() {
     saveButton.addEventListener('click', function() {
       const savedUsername = usernameInput.value;
       const savedItURL = itURLInput.value;
+      const savedUIURL = uiURLInput.value;
       const savedItAPI = itAPIInput.value;
       const savedJiraAPI = jiraAPIInput.value;
       const savedZendeskAPI = zendeskAPIInput.value;
@@ -30,6 +33,7 @@ document.addEventListener('DOMContentLoaded', function() {
       chrome.storage.local.set({ 
         username: savedUsername, 
         itURL: savedItURL, 
+        uiURL: savedUIURL,
         itAPI: savedItAPI, 
         jiraAPI: savedJiraAPI, 
         zendeskAPI: savedZendeskAPI, 
