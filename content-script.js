@@ -448,19 +448,27 @@ async function fetchDataFromPlatform(platform, id, apiKey, apiURL, itkey) {
       userIdApiUrl = `${apiURL}/fetchECData?key=${itkey}&email=${encodeURIComponent(
         reporterEmailAddress
       )}`;
-      const userIdResponse = await fetch(userIdApiUrl, options);
+      const userIdResponse = await fetch(userIdApiUrl, {
+        method: "GET",
+        headers: { accept: "application/json" },
+      });
+      if (!userIdResponse.ok) {
+        console.error("fetchECData failed:", userIdResponse.status, await userIdResponse.text());
+        return;
+      }
       const userIdData = await userIdResponse.json();
       const trialCheckbox = document.getElementById("Trial");
-      trialCheckbox.checked = true; // To check the checkbox
-      trialCheckbox.checked = false; // To uncheck the checkbox
-      document.getElementById("userID").value = userIdData.result[0].user_id
-        ? userIdData.result[0].user_id
-        : "ID not found";
-      if (userIdData.result[0].license === "trial") {
-        trialCheckbox.checked = true;
-      } else {
-        trialCheckbox.checked = false;
+      const row = userIdData?.result?.[0];
+      if (!row) {
+        console.warn("fetchECData returned no rows for", reporterEmailAddress);
+        return;
       }
+      const license =
+        typeof row.license === "string"
+          ? row.license
+          : row.license?.String || "";
+      document.getElementById("userID").value = row.user_id ? row.user_id : "ID not found";
+      trialCheckbox.checked = license.toLowerCase() === "trial";
     } else {
       console.log("Reporter email address not available");
     }
